@@ -121,9 +121,10 @@ export function MovingNoButton({ yesRef }: MovingNoButtonProps) {
   const emojiTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const dodge = useCallback(
-    (cursorX: number, cursorY: number) => {
+    (cursorX: number, cursorY: number, fromTap = false) => {
       if (shouldReduce || !btnRef.current) return
-      if (window.matchMedia('(pointer: coarse)').matches) return
+      // Skip coarse-pointer guard when triggered by a direct tap
+      if (!fromTap && window.matchMedia('(pointer: coarse)').matches) return
 
       const now = Date.now()
       if (now - lastDodge.current < 40) return // Throttle
@@ -132,7 +133,7 @@ export function MovingNoButton({ yesRef }: MovingNoButtonProps) {
       const btnCx = r.left + r.width / 2
       const btnCy = r.top + r.height / 2
 
-      if (dist(btnCx, btnCy, cursorX, cursorY) > PROXIMITY) return
+      if (!fromTap && dist(btnCx, btnCy, cursorX, cursorY) > PROXIMITY) return
 
       lastDodge.current = now
       dodgeCount.current += 1
@@ -176,7 +177,15 @@ export function MovingNoButton({ yesRef }: MovingNoButtonProps) {
   // Phase 1: sitting in the flex row, visible, normal button
   if (!pos) {
     return (
-      <button ref={btnRef} style={NO_BTN_STYLE} aria-label="No thank you">
+      <button
+        ref={btnRef}
+        style={NO_BTN_STYLE}
+        aria-label="No thank you"
+        onTouchStart={(e) => {
+          e.preventDefault()
+          dodge(e.touches[0].clientX, e.touches[0].clientY, true)
+        }}
+      >
         NO
       </button>
     )
@@ -218,6 +227,10 @@ export function MovingNoButton({ yesRef }: MovingNoButtonProps) {
         ref={btnRef}
         aria-label="No thank you"
         onKeyDown={onKeyDown}
+        onTouchStart={(e) => {
+          e.preventDefault()
+          dodge(e.touches[0].clientX, e.touches[0].clientY, true)
+        }}
         initial={false}
         animate={{
           x: pos.x,
