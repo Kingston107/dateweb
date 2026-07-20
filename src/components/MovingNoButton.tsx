@@ -121,10 +121,9 @@ export function MovingNoButton({ yesRef }: MovingNoButtonProps) {
   const emojiTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const dodge = useCallback(
-    (cursorX: number, cursorY: number, fromTap = false) => {
+    (cursorX: number, cursorY: number) => {
       if (shouldReduce || !btnRef.current) return
-      // Skip coarse-pointer guard when triggered by a direct tap
-      if (!fromTap && window.matchMedia('(pointer: coarse)').matches) return
+      if (window.matchMedia('(pointer: coarse)').matches) return
 
       const now = Date.now()
       if (now - lastDodge.current < 40) return // Throttle
@@ -133,7 +132,7 @@ export function MovingNoButton({ yesRef }: MovingNoButtonProps) {
       const btnCx = r.left + r.width / 2
       const btnCy = r.top + r.height / 2
 
-      if (!fromTap && dist(btnCx, btnCy, cursorX, cursorY) > PROXIMITY) return
+      if (dist(btnCx, btnCy, cursorX, cursorY) > PROXIMITY) return
 
       lastDodge.current = now
       dodgeCount.current += 1
@@ -158,14 +157,34 @@ export function MovingNoButton({ yesRef }: MovingNoButtonProps) {
     [shouldReduce, yesRef]
   )
 
+  // Mobile tap: tap lands ON the button so dodgePos gets ~zero vector.
+  // Use randomPos directly — guaranteed to jump somewhere valid.
+  // onClick fires reliably on all mobile browsers including iOS Safari.
+  const tapDodge = useCallback(() => {
+    if (shouldReduce) return
+    const yesRect = yesRef.current?.getBoundingClientRect() ?? null
+    const next = randomPos(yesRect, HEADING_SAFE_Y)
+    lastDodge.current = Date.now()
+    dodgeCount.current += 1
+    const n = dodgeCount.current
+    setPos(next)
+    const effects = ['😅', '🏃', '💨', 'nope!', '🙈']
+    if (n % 3 === 0) {
+      setEmoji(effects[Math.floor(Math.random() * effects.length)])
+      if (emojiTimer.current) clearTimeout(emojiTimer.current)
+      emojiTimer.current = setTimeout(() => setEmoji(null), 1200)
+      setTransform({ scale: 0.9, rotate: (Math.random() - 0.5) * 40 })
+    } else {
+      setTransform({ scale: 1, rotate: (Math.random() - 0.5) * 18 })
+    }
+  }, [shouldReduce, yesRef])
+
   useEffect(() => {
     if (shouldReduce) return
     const onMove = (e: PointerEvent) => dodge(e.clientX, e.clientY)
     window.addEventListener('pointermove', onMove, { passive: true })
     return () => window.removeEventListener('pointermove', onMove)
   }, [shouldReduce, dodge])
-
-  // Touch listener removed to allow normal tapping on mobile
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -181,10 +200,7 @@ export function MovingNoButton({ yesRef }: MovingNoButtonProps) {
         ref={btnRef}
         style={NO_BTN_STYLE}
         aria-label="No thank you"
-        onTouchStart={(e) => {
-          e.preventDefault()
-          dodge(e.touches[0].clientX, e.touches[0].clientY, true)
-        }}
+        onClick={tapDodge}
       >
         NO
       </button>
@@ -227,10 +243,7 @@ export function MovingNoButton({ yesRef }: MovingNoButtonProps) {
         ref={btnRef}
         aria-label="No thank you"
         onKeyDown={onKeyDown}
-        onTouchStart={(e) => {
-          e.preventDefault()
-          dodge(e.touches[0].clientX, e.touches[0].clientY, true)
-        }}
+        onClick={tapDodge}
         initial={false}
         animate={{
           x: pos.x,
