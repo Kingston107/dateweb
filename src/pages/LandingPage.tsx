@@ -14,7 +14,7 @@
  *   - Buttons  → staggerChildren (0.14s apart) with spring
  */
 import { useRef } from 'react'
-import { motion } from 'framer-motion'
+import { motion, type Variants } from 'framer-motion'
 import { EnvelopeIllustration } from '../components/EnvelopeIllustration'
 import { FloatingHeart } from '../components/FloatingHeart'
 import { DateButton } from '../components/DateButton'
@@ -24,7 +24,7 @@ import { HEART_CONFIGS } from '../data/heartConfig'
 /* ─── Framer Motion variants ──────────────────────────────── */
 
 /** Whole-page fade + rise on mount */
-const pageVariants = {
+const pageVariants: Variants = {
   hidden: { opacity: 0, y: 28 },
   visible: {
     opacity: 1,
@@ -39,7 +39,7 @@ const pageVariants = {
 }
 
 /** Children (heading + button group) fade + slight rise */
-const childVariants = {
+const childVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
@@ -49,7 +49,7 @@ const childVariants = {
 }
 
 /** Button group stagger parent */
-const buttonGroupVariants = {
+const buttonGroupVariants: Variants = {
   hidden: {},
   visible: {
     transition: {
@@ -60,7 +60,7 @@ const buttonGroupVariants = {
 }
 
 /** Individual button entrance */
-const buttonVariants = {
+const buttonVariants: Variants = {
   hidden: { opacity: 0, scale: 0.88, y: 16 },
   visible: {
     opacity: 1,
