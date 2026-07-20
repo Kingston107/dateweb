@@ -38,8 +38,8 @@ function FoodCard({ emoji, label, selected, onToggle }: FoodCardProps) {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: 10,
-        padding: '24px 16px 20px',
+        gap: 8,
+        padding: '16px 12px 14px',
         borderRadius: 20,
         border: selected ? '2px solid #C84D75' : '2px solid transparent',
         background: selected ? '#FFF0F5' : '#ffffff',
@@ -62,17 +62,17 @@ function FoodCard({ emoji, label, selected, onToggle }: FoodCardProps) {
           transition={{ type: 'spring', stiffness: 500, damping: 22 }}
           style={{
             position: 'absolute',
-            top: 10,
-            right: 10,
-            width: 22,
-            height: 22,
+            top: 8,
+            right: 8,
+            width: 20,
+            height: 20,
             borderRadius: '50%',
             background: '#C84D75',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             color: '#fff',
-            fontSize: 13,
+            fontSize: 12,
             fontWeight: 700,
             lineHeight: 1,
           }}
@@ -83,7 +83,7 @@ function FoodCard({ emoji, label, selected, onToggle }: FoodCardProps) {
       )}
 
       {/* Emoji */}
-      <span style={{ fontSize: 44, lineHeight: 1, userSelect: 'none' }} aria-hidden="true">
+      <span style={{ fontSize: 36, lineHeight: 1, userSelect: 'none' }} aria-hidden="true">
         {emoji}
       </span>
 
@@ -92,7 +92,7 @@ function FoodCard({ emoji, label, selected, onToggle }: FoodCardProps) {
         style={{
           fontFamily: '"Inter", system-ui, sans-serif',
           fontWeight: selected ? 700 : 600,
-          fontSize: '0.95rem',
+          fontSize: '0.9rem',
           color: selected ? '#C84D75' : '#7A2A45',
           transition: 'color 0.2s, font-weight 0.2s',
         }}
@@ -126,6 +126,7 @@ interface FoodSelectionProps {
 /* ─── Main component ────────────────────────────────────────── */
 export function FoodSelection({ onNext }: FoodSelectionProps) {
   const [selected, setSelected] = useState<Set<string>>(new Set())
+  const [customFood, setCustomFood] = useState('')
 
   function toggle(id: string) {
     setSelected((prev) => {
@@ -135,7 +136,7 @@ export function FoodSelection({ onNext }: FoodSelectionProps) {
     })
   }
 
-  const canProceed = selected.size > 0
+  const canProceed = selected.size > 0 || customFood.trim().length > 0
 
   return (
     <motion.main
@@ -160,7 +161,7 @@ export function FoodSelection({ onNext }: FoodSelectionProps) {
       ))}
 
       <div
-        className="relative z-10 flex flex-col items-center justify-center min-h-full px-4 py-10"
+        className="relative z-10 flex flex-col items-center justify-center min-h-[100dvh] px-4 py-8"
         style={{ maxWidth: 640, margin: '0 auto' }}
       >
         {/* Progress */}
@@ -178,7 +179,7 @@ export function FoodSelection({ onNext }: FoodSelectionProps) {
             fontSize: 'clamp(1.75rem, 5vw, 2.5rem)',
             lineHeight: 1.15,
             textAlign: 'center',
-            marginBottom: 8,
+            marginBottom: 4,
           }}
         >
           What are we feeling? 🍽️
@@ -192,9 +193,9 @@ export function FoodSelection({ onNext }: FoodSelectionProps) {
           style={{
             fontFamily: '"Inter", system-ui, sans-serif',
             color: '#E0739A',
-            fontSize: '0.95rem',
+            fontSize: '0.9rem',
             fontStyle: 'italic',
-            marginBottom: 28,
+            marginBottom: 16,
             textAlign: 'center',
           }}
         >
@@ -209,7 +210,7 @@ export function FoodSelection({ onNext }: FoodSelectionProps) {
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(2, 1fr)',
-            gap: 14,
+            gap: 10,
             width: '100%',
           }}
           className="sm:grid-cols-3"
@@ -225,18 +226,47 @@ export function FoodSelection({ onNext }: FoodSelectionProps) {
           ))}
         </motion.div>
 
+        {/* Custom food input */}
+        <motion.input
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.4 }}
+          type="text"
+          placeholder="What food do you want to have?"
+          value={customFood}
+          onChange={(e) => setCustomFood(e.target.value)}
+          style={{
+            width: '100%',
+            marginTop: 24,
+            padding: '14px 20px',
+            borderRadius: 20,
+            border: customFood.trim() ? '2px solid #C84D75' : '2px solid transparent',
+            background: '#ffffff',
+            boxShadow: '0 2px 12px 0 rgba(200,77,117,0.08)',
+            fontFamily: '"Inter", system-ui, sans-serif',
+            fontSize: '0.95rem',
+            color: '#7A2A45',
+            outline: 'none',
+            transition: 'border-color 0.2s',
+          }}
+        />
+
         {/* Continue button */}
         <motion.div
           initial={{ opacity: 0, scale: 0.88 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.35, type: 'spring', stiffness: 320, damping: 24 }}
-          style={{ width: '100%', marginTop: 28 }}
+          style={{ width: '100%', marginTop: 24 }}
         >
           <DateButton
             variant="yes"
             wide
             disabled={!canProceed}
-            onClick={() => onNext([...selected])}
+            onClick={() => {
+              const allFoods = [...selected]
+              if (customFood.trim()) allFoods.push(customFood.trim())
+              onNext(allFoods)
+            }}
           >
             this one! 🍴
           </DateButton>
