@@ -38,6 +38,13 @@ function App() {
   const showArrows = screen === 'landing' || screen === 'datetime' || screen === 'food'
   const currentIndex = navOrder.indexOf(screen)
 
+  function canTraverseNext() {
+    if (screen === 'landing') return false
+    if (screen === 'datetime') return state.date.trim() !== '' && state.time.trim() !== ''
+    if (screen === 'food') return state.foods.length > 0 || state.place.trim() !== ''
+    return false
+  }
+
   function handleBack() {
     if (currentIndex > 0) setScreen(navOrder[currentIndex - 1])
   }
@@ -79,11 +86,16 @@ function App() {
               <LeftArrowIcon />
             </button>
           )}
-          {currentIndex < navOrder.length - 1 && (
+          {currentIndex < navOrder.length - 1 && screen !== 'landing' && (
             <button
               onClick={handleNext}
+              disabled={!canTraverseNext()}
               aria-label="Skip to next"
-              className="fixed top-6 right-6 z-50 p-2 rounded-full hover:bg-pink-100 text-pink-400 transition-colors"
+              className={`fixed top-6 right-6 z-50 p-2 rounded-full transition-colors ${
+                canTraverseNext()
+                  ? 'hover:bg-pink-100 text-pink-400 cursor-pointer'
+                  : 'text-gray-300 cursor-not-allowed opacity-50'
+              }`}
             >
               <RightArrowIcon />
             </button>
