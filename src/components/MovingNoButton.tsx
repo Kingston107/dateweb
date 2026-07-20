@@ -121,25 +121,29 @@ export function MovingNoButton({ yesRef }: MovingNoButtonProps) {
   const emojiTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const dodge = useCallback(
-    (cursorX: number, cursorY: number) => {
+    (cursorX?: number, cursorY?: number) => {
       if (shouldReduce || !btnRef.current) return
-      if (window.matchMedia('(pointer: coarse)').matches) return
 
       const now = Date.now()
       if (now - lastDodge.current < 40) return // Throttle
 
-      const r = btnRef.current.getBoundingClientRect()
-      const btnCx = r.left + r.width / 2
-      const btnCy = r.top + r.height / 2
+      let next
+      const yesRect = yesRef.current?.getBoundingClientRect() ?? null
 
-      if (dist(btnCx, btnCy, cursorX, cursorY) > PROXIMITY) return
+      if (cursorX !== undefined && cursorY !== undefined) {
+        const r = btnRef.current.getBoundingClientRect()
+        const btnCx = r.left + r.width / 2
+        const btnCy = r.top + r.height / 2
+
+        if (dist(btnCx, btnCy, cursorX, cursorY) > PROXIMITY) return
+        next = dodgePos(btnCx, btnCy, cursorX, cursorY, yesRect, HEADING_SAFE_Y)
+      } else {
+        next = randomPos(yesRect, HEADING_SAFE_Y)
+      }
 
       lastDodge.current = now
       dodgeCount.current += 1
       const n = dodgeCount.current
-
-      const yesRect = yesRef.current?.getBoundingClientRect() ?? null
-      const next = dodgePos(btnCx, btnCy, cursorX, cursorY, yesRect, HEADING_SAFE_Y)
 
       setPos(next)
 
@@ -157,31 +161,11 @@ export function MovingNoButton({ yesRef }: MovingNoButtonProps) {
     [shouldReduce, yesRef]
   )
 
-  // Mobile tap: tap lands ON the button so dodgePos gets ~zero vector.
-  // Use randomPos directly — guaranteed to jump somewhere valid.
-  // onClick fires reliably on all mobile browsers including iOS Safari.
-  const tapDodge = useCallback(() => {
-    if (shouldReduce) return
-    const yesRect = yesRef.current?.getBoundingClientRect() ?? null
-    const next = randomPos(yesRect, HEADING_SAFE_Y)
-    lastDodge.current = Date.now()
-    dodgeCount.current += 1
-    const n = dodgeCount.current
-    setPos(next)
-    const effects = ['😅', '🏃', '💨', 'nope!', '🙈']
-    if (n % 3 === 0) {
-      setEmoji(effects[Math.floor(Math.random() * effects.length)])
-      if (emojiTimer.current) clearTimeout(emojiTimer.current)
-      emojiTimer.current = setTimeout(() => setEmoji(null), 1200)
-      setTransform({ scale: 0.9, rotate: (Math.random() - 0.5) * 40 })
-    } else {
-      setTransform({ scale: 1, rotate: (Math.random() - 0.5) * 18 })
-    }
-  }, [shouldReduce, yesRef])
-
   useEffect(() => {
     if (shouldReduce) return
-    const onMove = (e: PointerEvent) => dodge(e.clientX, e.clientY)
+    const onMove = (e: PointerEvent) => {
+      if (e.pointerType === 'mouse') dodge(e.clientX, e.clientY)
+    }
     window.addEventListener('pointermove', onMove, { passive: true })
     return () => window.removeEventListener('pointermove', onMove)
   }, [shouldReduce, dodge])
@@ -200,7 +184,7 @@ export function MovingNoButton({ yesRef }: MovingNoButtonProps) {
         ref={btnRef}
         style={NO_BTN_STYLE}
         aria-label="No thank you"
-        onClick={tapDodge}
+        onClick={() => dodge()}
       >
         NO
       </button>
@@ -243,7 +227,7 @@ export function MovingNoButton({ yesRef }: MovingNoButtonProps) {
         ref={btnRef}
         aria-label="No thank you"
         onKeyDown={onKeyDown}
-        onClick={tapDodge}
+        onClick={() => dodge()}
         initial={false}
         animate={{
           x: pos.x,
