@@ -185,14 +185,17 @@ const PAGE_BG: React.CSSProperties = {
 
 /* ─── Props ────────────────────────────────────────────────── */
 interface DateTimeCardProps {
+  initialDate?: string
+  initialTime?: string
+  initialNotes?: string
   onNext: (date: string, time: string, notes: string) => void
 }
 
 /* ─── Main component ───────────────────────────────────────── */
-export function DateTimeCard({ onNext }: DateTimeCardProps) {
-  const [date, setDate] = useState('')
-  const [time, setTime] = useState('')
-  const [notes, setNotes] = useState('')
+export function DateTimeCard({ initialDate = '', initialTime = '', initialNotes = '', onNext }: DateTimeCardProps) {
+  const [date, setDate] = useState(initialDate)
+  const [time, setTime] = useState(initialTime)
+  const [notes, setNotes] = useState(initialNotes)
 
   const canProceed = date !== '' && time !== ''
 

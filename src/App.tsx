@@ -120,13 +120,22 @@ function App() {
 
         {screen === 'datetime' && (
           <motion.div key="datetime" exit={slideExit} style={{ height: '100vh' }}>
-            <DateTimeCard onNext={handleDateNext} />
+            <DateTimeCard
+              initialDate={state.date}
+              initialTime={state.time}
+              initialNotes={state.notes}
+              onNext={handleDateNext}
+            />
           </motion.div>
         )}
 
         {screen === 'food' && (
           <motion.div key="food" exit={slideExit} style={{ minHeight: '100vh' }}>
-            <FoodSelection onNext={handleFoodNext} />
+            <FoodSelection
+              initialFoods={state.foods}
+              initialPlace={state.place}
+              onNext={handleFoodNext}
+            />
           </motion.div>
         )}
 

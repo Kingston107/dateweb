@@ -120,14 +120,20 @@ const PAGE_BG: React.CSSProperties = {
 
 /* ─── Props ─────────────────────────────────────────────────── */
 interface FoodSelectionProps {
+  initialFoods?: string[]
+  initialPlace?: string
   onNext: (foods: string[], place: string) => void
 }
 
 /* ─── Main component ────────────────────────────────────────── */
-export function FoodSelection({ onNext }: FoodSelectionProps) {
-  const [selected, setSelected] = useState<Set<string>>(new Set())
-  const [customFood, setCustomFood] = useState('')
-  const [customPlace, setCustomPlace] = useState('')
+export function FoodSelection({ initialFoods = [], initialPlace = '', onNext }: FoodSelectionProps) {
+  const [selected, setSelected] = useState<Set<string>>(() => {
+    return new Set(initialFoods.filter(f => FOODS.some(food => food.id === f)))
+  })
+  const [customFood, setCustomFood] = useState(() => {
+    return initialFoods.find(f => !FOODS.some(food => food.id === f)) || ''
+  })
+  const [customPlace, setCustomPlace] = useState(initialPlace)
 
   function toggle(id: string) {
     setSelected((prev) => {
