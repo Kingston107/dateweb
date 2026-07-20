@@ -224,7 +224,7 @@ export function DateTimeCard({ onNext }: DateTimeCardProps) {
 
   return (
     <main
-      className="relative h-screen w-full overflow-hidden flex items-center justify-center"
+      className="relative min-h-[100dvh] w-full flex flex-col items-center justify-center overflow-hidden px-6"
       style={PAGE_BG}
       aria-label="Date and time selection"
     >
@@ -246,7 +246,7 @@ export function DateTimeCard({ onNext }: DateTimeCardProps) {
         variants={cardVariants}
         initial="hidden"
         animate="visible"
-        className="relative z-10 w-full max-w-md mx-4"
+        className="relative z-10 w-full max-w-md"
         style={{
           background: 'rgba(255,255,255,0.88)',
           backdropFilter: 'blur(16px)',

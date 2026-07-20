@@ -85,7 +85,7 @@ export function LandingPage({ onYes }: LandingPageProps) {
   return (
     <motion.main
       id="landing-page"
-      className="relative h-screen w-full overflow-hidden"
+      className="relative min-h-[100dvh] w-full flex flex-col items-center justify-center overflow-hidden px-6"
       style={PAGE_BG}
       variants={pageVariants}
       initial="hidden"
@@ -106,7 +106,7 @@ export function LandingPage({ onYes }: LandingPageProps) {
       ))}
 
       {/* ── Main content, vertically + horizontally centered ── */}
-      <div className="relative z-10 flex h-full flex-col items-center justify-center px-6">
+      <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-md">
 
         {/* Envelope */}
         <motion.div variants={childVariants}>

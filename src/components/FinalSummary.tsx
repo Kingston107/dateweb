@@ -237,7 +237,7 @@ export function FinalSummary({ date, time, notes, foods }: FinalSummaryProps) {
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-        className="relative h-screen w-full overflow-y-auto"
+        className="relative min-h-[100dvh] w-full flex flex-col items-center justify-center overflow-y-auto px-6"
         style={PAGE_BG}
         aria-label="Final confirmation screen"
       >
@@ -255,8 +255,8 @@ export function FinalSummary({ date, time, notes, foods }: FinalSummaryProps) {
         ))}
 
         <div
-          className="relative z-10 flex flex-col items-center justify-center min-h-full px-4 py-10"
-          style={{ maxWidth: 520, margin: '0 auto' }}
+          className="relative z-10 flex flex-col items-center justify-center w-full max-w-md py-8"
+          style={{ margin: '0 auto' }}
         >
           {/* Progress — all steps done */}
           <ProgressDots />

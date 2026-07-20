@@ -143,7 +143,7 @@ export function FoodSelection({ onNext }: FoodSelectionProps) {
       variants={screenVariant}
       initial="hidden"
       animate="visible"
-      className="relative h-screen w-full overflow-y-auto"
+      className="relative min-h-[100dvh] w-full flex flex-col items-center justify-center overflow-y-auto px-6"
       style={PAGE_BG}
       aria-label="Food selection screen"
     >
@@ -161,8 +161,8 @@ export function FoodSelection({ onNext }: FoodSelectionProps) {
       ))}
 
       <div
-        className="relative z-10 flex flex-col items-center justify-center min-h-[100dvh] px-4 py-8"
-        style={{ maxWidth: 640, margin: '0 auto' }}
+        className="relative z-10 flex flex-col items-center justify-center w-full max-w-md py-8"
+        style={{ margin: '0 auto' }}
       >
         {/* Progress */}
         <ProgressDots step={2} />

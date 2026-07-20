@@ -62,7 +62,7 @@ export function CelebrationScreen({ onNext }: CelebrationScreenProps) {
   return (
     <motion.main
       id="celebration-screen"
-      className="relative h-screen w-full overflow-hidden"
+      className="relative min-h-[100dvh] w-full flex flex-col items-center justify-center overflow-hidden px-6"
       style={PAGE_BG}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -84,7 +84,7 @@ export function CelebrationScreen({ onNext }: CelebrationScreenProps) {
 
       {/* ── Main content ─────────────────────────────────────── */}
       <motion.div
-        className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center"
+        className="relative z-10 flex flex-col items-center justify-center w-full max-w-md text-center"
         variants={container}
         initial="hidden"
         animate="visible"
