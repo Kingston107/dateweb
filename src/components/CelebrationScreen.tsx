@@ -62,7 +62,7 @@ export function CelebrationScreen({ onNext }: CelebrationScreenProps) {
   return (
     <motion.main
       id="celebration-screen"
-      className="relative min-h-[100dvh] w-full flex flex-col items-center justify-center overflow-hidden px-6"
+      className="relative min-h-[100dvh] w-full flex flex-col items-center justify-center overflow-hidden p-4"
       style={PAGE_BG}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -84,7 +84,7 @@ export function CelebrationScreen({ onNext }: CelebrationScreenProps) {
 
       {/* ── Main content ─────────────────────────────────────── */}
       <motion.div
-        className="relative z-10 flex flex-col items-center justify-center w-full max-w-md text-center"
+        className="relative z-10 flex flex-col items-center justify-center w-full max-w-md md:max-w-3xl text-center gap-8"
         variants={container}
         initial="hidden"
         animate="visible"
@@ -95,7 +95,7 @@ export function CelebrationScreen({ onNext }: CelebrationScreenProps) {
         {/* Heading */}
         <motion.h1
           variants={rise}
-          className="mt-6 max-w-[560px]"
+          className="md:whitespace-nowrap"
           style={{
             fontFamily: '"Playfair Display", Georgia, serif',
             fontWeight: 800,
@@ -111,7 +111,7 @@ export function CelebrationScreen({ onNext }: CelebrationScreenProps) {
         {/* Subtext */}
         <motion.p
           variants={rise}
-          className="mt-4 max-w-[360px]"
+          className="max-w-[360px]"
           style={{
             fontFamily: '"Inter", system-ui, sans-serif',
             fontWeight: 500,
@@ -127,7 +127,7 @@ export function CelebrationScreen({ onNext }: CelebrationScreenProps) {
         </motion.p>
 
         {/* CTA button */}
-        <motion.div variants={pop} className="mt-10">
+        <motion.div variants={pop}>
           <DateButton variant="yes" onClick={onNext}>
             okay okay!
           </DateButton>
