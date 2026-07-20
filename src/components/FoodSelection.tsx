@@ -238,7 +238,7 @@ export function FoodSelection({ onNext }: FoodSelectionProps) {
           {/* Food Input */}
           <input
             type="text"
-            placeholder="What food do you want to have?"
+            placeholder="If your fav isn't here, tell me! "
             value={customFood}
             onChange={(e) => setCustomFood(e.target.value)}
             style={{
@@ -259,7 +259,7 @@ export function FoodSelection({ onNext }: FoodSelectionProps) {
           {/* Place Input */}
           <input
             type="text"
-            placeholder="Where do you want to go? (Place)"
+            placeholder="Got a specific spot in mind? "
             value={customPlace}
             onChange={(e) => setCustomPlace(e.target.value)}
             style={{
