@@ -15,7 +15,7 @@ const BTN_W = 180
 const BTN_H = 50
 const MARGIN = 20
 const PROXIMITY = 90
-const HEADING_SAFE_Y = 0.62
+const HEADING_SAFE_Y = 0.05
 
 /* ─── Helpers ────────────────────────────────────────────── */
 
