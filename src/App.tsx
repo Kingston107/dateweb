@@ -26,13 +26,18 @@ interface AppState {
   time: string
   notes: string
   foods: string[]
+  customFood: string
   place: string
 }
 
 function App() {
   const [screen, setScreen] = useState<Screen>('landing')
   const [showConfetti, setShowConfetti] = useState(false)
-  const [state, setState] = useState<AppState>({ date: '', time: '', notes: '', foods: [], place: '' })
+  const [state, setState] = useState<AppState>({ date: '', time: '', notes: '', foods: [], customFood: '', place: '' })
+
+  function handleUpdate(updates: Partial<AppState>) {
+    setState(s => ({ ...s, ...updates }))
+  }
 
   const navOrder: Screen[] = ['landing', 'datetime', 'food', 'summary']
   const showArrows = screen === 'landing' || screen === 'datetime' || screen === 'food'
@@ -41,7 +46,7 @@ function App() {
   function canTraverseNext() {
     if (screen === 'landing') return false
     if (screen === 'datetime') return state.date.trim() !== '' && state.time.trim() !== ''
-    if (screen === 'food') return state.foods.length > 0 || state.place.trim() !== ''
+    if (screen === 'food') return state.foods.length > 0 || state.customFood.trim() !== '' || state.place.trim() !== ''
     return false
   }
 
@@ -61,13 +66,11 @@ function App() {
     setTimeout(() => setShowConfetti(false), 3500)
   }
 
-  function handleDateNext(date: string, time: string, notes: string) {
-    setState((s) => ({ ...s, date, time, notes }))
+  function handleDateNext() {
     setScreen('food')
   }
 
-  function handleFoodNext(foods: string[], place: string) {
-    setState((s) => ({ ...s, foods, place }))
+  function handleFoodNext() {
     setScreen('summary')
   }
 
@@ -121,9 +124,10 @@ function App() {
         {screen === 'datetime' && (
           <motion.div key="datetime" exit={slideExit} style={{ height: '100vh' }}>
             <DateTimeCard
-              initialDate={state.date}
-              initialTime={state.time}
-              initialNotes={state.notes}
+              date={state.date}
+              time={state.time}
+              notes={state.notes}
+              onUpdate={handleUpdate}
               onNext={handleDateNext}
             />
           </motion.div>
@@ -132,8 +136,10 @@ function App() {
         {screen === 'food' && (
           <motion.div key="food" exit={slideExit} style={{ minHeight: '100vh' }}>
             <FoodSelection
-              initialFoods={state.foods}
-              initialPlace={state.place}
+              foods={state.foods}
+              customFood={state.customFood}
+              place={state.place}
+              onUpdate={handleUpdate}
               onNext={handleFoodNext}
             />
           </motion.div>
@@ -145,7 +151,7 @@ function App() {
               date={state.date}
               time={state.time}
               notes={state.notes}
-              foods={state.foods}
+              foods={[...state.foods, ...(state.customFood.trim() ? [state.customFood.trim()] : [])]}
               place={state.place}
             />
           </motion.div>

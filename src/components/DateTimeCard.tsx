@@ -8,7 +8,6 @@
  * Reuses: FloatingHeart, HEART_CONFIGS (already in codebase).
  * State lifted to parent via onSubmit callback.
  */
-import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { FloatingHeart } from './FloatingHeart'
 import { HEART_CONFIGS } from '../data/heartConfig'
@@ -185,17 +184,15 @@ const PAGE_BG: React.CSSProperties = {
 
 /* ─── Props ────────────────────────────────────────────────── */
 interface DateTimeCardProps {
-  initialDate?: string
-  initialTime?: string
-  initialNotes?: string
-  onNext: (date: string, time: string, notes: string) => void
+  date: string
+  time: string
+  notes: string
+  onUpdate: (updates: { date?: string; time?: string; notes?: string }) => void
+  onNext: () => void
 }
 
 /* ─── Main component ───────────────────────────────────────── */
-export function DateTimeCard({ initialDate = '', initialTime = '', initialNotes = '', onNext }: DateTimeCardProps) {
-  const [date, setDate] = useState(initialDate)
-  const [time, setTime] = useState(initialTime)
-  const [notes, setNotes] = useState(initialNotes)
+export function DateTimeCard({ date, time, notes, onUpdate, onNext }: DateTimeCardProps) {
 
   const canProceed = date !== '' && time !== ''
 
@@ -305,7 +302,7 @@ export function DateTimeCard({ initialDate = '', initialTime = '', initialNotes 
             >
               Date
             </label>
-            <DateInput value={date} onChange={setDate} />
+            <DateInput value={date} onChange={v => onUpdate({ date: v })} />
           </motion.div>
 
           {/* Time */}
@@ -325,7 +322,7 @@ export function DateTimeCard({ initialDate = '', initialTime = '', initialNotes 
             >
               Time
             </label>
-            <TimeInput value={time} onChange={setTime} />
+            <TimeInput value={time} onChange={v => onUpdate({ time: v })} />
           </motion.div>
 
           {/* Notes */}
@@ -345,7 +342,7 @@ export function DateTimeCard({ initialDate = '', initialTime = '', initialNotes 
             >
               Notes <span style={{ opacity: 0.5, fontWeight: 400, textTransform: 'none' }}>(optional)</span>
             </label>
-            <NotesInput value={notes} onChange={setNotes} />
+            <NotesInput value={notes} onChange={v => onUpdate({ notes: v })} />
           </motion.div>
 
           {/* Button */}
@@ -353,7 +350,7 @@ export function DateTimeCard({ initialDate = '', initialTime = '', initialNotes 
             <motion.button
               style={NEXT_BTN}
               disabled={!canProceed}
-              onClick={() => canProceed && onNext(date, time, notes)}
+              onClick={() => canProceed && onNext()}
               whileHover={canProceed ? { scale: 1.03, filter: 'brightness(1.08)' } : {}}
               whileTap={canProceed ? { scale: 0.97 } : {}}
               transition={{ type: 'spring', stiffness: 380, damping: 22 }}

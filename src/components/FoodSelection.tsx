@@ -5,7 +5,6 @@
  * Reuses: FloatingHeart, HEART_CONFIGS, DateButton (disabled/wide variant).
  * State lifted to parent via onNext callback.
  */
-import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { FloatingHeart } from './FloatingHeart'
 import { DateButton } from './DateButton'
@@ -120,30 +119,24 @@ const PAGE_BG: React.CSSProperties = {
 
 /* ─── Props ─────────────────────────────────────────────────── */
 interface FoodSelectionProps {
-  initialFoods?: string[]
-  initialPlace?: string
-  onNext: (foods: string[], place: string) => void
+  foods: string[]
+  customFood: string
+  place: string
+  onUpdate: (updates: { foods?: string[]; customFood?: string; place?: string }) => void
+  onNext: () => void
 }
 
 /* ─── Main component ────────────────────────────────────────── */
-export function FoodSelection({ initialFoods = [], initialPlace = '', onNext }: FoodSelectionProps) {
-  const [selected, setSelected] = useState<Set<string>>(() => {
-    return new Set(initialFoods.filter(f => FOODS.some(food => food.id === f)))
-  })
-  const [customFood, setCustomFood] = useState(() => {
-    return initialFoods.find(f => !FOODS.some(food => food.id === f)) || ''
-  })
-  const [customPlace, setCustomPlace] = useState(initialPlace)
+export function FoodSelection({ foods, customFood, place, onUpdate, onNext }: FoodSelectionProps) {
+  const selected = new Set(foods)
 
   function toggle(id: string) {
-    setSelected((prev) => {
-      const next = new Set(prev)
-      next.has(id) ? next.delete(id) : next.add(id)
-      return next
-    })
+    const next = new Set(selected)
+    next.has(id) ? next.delete(id) : next.add(id)
+    onUpdate({ foods: [...next] })
   }
 
-  const canProceed = selected.size > 0 || customFood.trim().length > 0 || customPlace.trim().length > 0
+  const canProceed = selected.size > 0 || customFood.trim().length > 0 || place.trim().length > 0
 
   return (
     <motion.main
@@ -246,7 +239,7 @@ export function FoodSelection({ initialFoods = [], initialPlace = '', onNext }: 
             type="text"
             placeholder="If your fav isn't here, tell me! "
             value={customFood}
-            onChange={(e) => setCustomFood(e.target.value)}
+            onChange={(e) => onUpdate({ customFood: e.target.value })}
             style={{
               width: '100%',
               padding: '14px 20px',
@@ -266,13 +259,13 @@ export function FoodSelection({ initialFoods = [], initialPlace = '', onNext }: 
           <input
             type="text"
             placeholder="Got a specific spot in mind? "
-            value={customPlace}
-            onChange={(e) => setCustomPlace(e.target.value)}
+            value={place}
+            onChange={(e) => onUpdate({ place: e.target.value })}
             style={{
               width: '100%',
               padding: '14px 20px',
               borderRadius: 20,
-              border: customPlace.trim() ? '2px solid #C84D75' : '2px solid transparent',
+              border: place.trim() ? '2px solid #C84D75' : '2px solid transparent',
               background: '#ffffff',
               boxShadow: '0 2px 12px 0 rgba(200,77,117,0.08)',
               fontFamily: '"Inter", system-ui, sans-serif',
@@ -295,11 +288,7 @@ export function FoodSelection({ initialFoods = [], initialPlace = '', onNext }: 
             variant="yes"
             wide
             disabled={!canProceed}
-            onClick={() => {
-              const allFoods = [...selected]
-              if (customFood.trim()) allFoods.push(customFood.trim())
-              onNext(allFoods, customPlace.trim())
-            }}
+            onClick={() => canProceed && onNext()}
           >
             this one! 🍴
           </DateButton>
