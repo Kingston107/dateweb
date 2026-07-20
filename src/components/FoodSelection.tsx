@@ -120,13 +120,14 @@ const PAGE_BG: React.CSSProperties = {
 
 /* ─── Props ─────────────────────────────────────────────────── */
 interface FoodSelectionProps {
-  onNext: (foods: string[]) => void
+  onNext: (foods: string[], place: string) => void
 }
 
 /* ─── Main component ────────────────────────────────────────── */
 export function FoodSelection({ onNext }: FoodSelectionProps) {
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [customFood, setCustomFood] = useState('')
+  const [customPlace, setCustomPlace] = useState('')
 
   function toggle(id: string) {
     setSelected((prev) => {
@@ -136,7 +137,7 @@ export function FoodSelection({ onNext }: FoodSelectionProps) {
     })
   }
 
-  const canProceed = selected.size > 0 || customFood.trim().length > 0
+  const canProceed = selected.size > 0 || customFood.trim().length > 0 || customPlace.trim().length > 0
 
   return (
     <motion.main
@@ -226,30 +227,56 @@ export function FoodSelection({ onNext }: FoodSelectionProps) {
           ))}
         </motion.div>
 
-        {/* Custom food input */}
-        <motion.input
+        {/* Custom inputs */}
+        <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.4 }}
-          type="text"
-          placeholder="What food do you want to have?"
-          value={customFood}
-          onChange={(e) => setCustomFood(e.target.value)}
-          style={{
-            width: '100%',
-            marginTop: 24,
-            padding: '14px 20px',
-            borderRadius: 20,
-            border: customFood.trim() ? '2px solid #C84D75' : '2px solid transparent',
-            background: '#ffffff',
-            boxShadow: '0 2px 12px 0 rgba(200,77,117,0.08)',
-            fontFamily: '"Inter", system-ui, sans-serif',
-            fontSize: '0.95rem',
-            color: '#7A2A45',
-            outline: 'none',
-            transition: 'border-color 0.2s',
-          }}
-        />
+          className="flex flex-col w-full"
+          style={{ marginTop: 16, gap: 12 }}
+        >
+          {/* Food Input */}
+          <input
+            type="text"
+            placeholder="What food do you want to have?"
+            value={customFood}
+            onChange={(e) => setCustomFood(e.target.value)}
+            style={{
+              width: '100%',
+              padding: '14px 20px',
+              borderRadius: 20,
+              border: customFood.trim() ? '2px solid #C84D75' : '2px solid transparent',
+              background: '#ffffff',
+              boxShadow: '0 2px 12px 0 rgba(200,77,117,0.08)',
+              fontFamily: '"Inter", system-ui, sans-serif',
+              fontSize: '0.95rem',
+              color: '#7A2A45',
+              outline: 'none',
+              transition: 'border-color 0.2s',
+            }}
+          />
+
+          {/* Place Input */}
+          <input
+            type="text"
+            placeholder="Where do you want to go? (Place)"
+            value={customPlace}
+            onChange={(e) => setCustomPlace(e.target.value)}
+            style={{
+              width: '100%',
+              padding: '14px 20px',
+              borderRadius: 20,
+              border: customPlace.trim() ? '2px solid #C84D75' : '2px solid transparent',
+              background: '#ffffff',
+              boxShadow: '0 2px 12px 0 rgba(200,77,117,0.08)',
+              fontFamily: '"Inter", system-ui, sans-serif',
+              fontSize: '0.95rem',
+              color: '#7A2A45',
+              outline: 'none',
+              transition: 'border-color 0.2s',
+            }}
+          />
+        </motion.div>
 
         {/* Continue button */}
         <motion.div
@@ -265,7 +292,7 @@ export function FoodSelection({ onNext }: FoodSelectionProps) {
             onClick={() => {
               const allFoods = [...selected]
               if (customFood.trim()) allFoods.push(customFood.trim())
-              onNext(allFoods)
+              onNext(allFoods, customPlace.trim())
             }}
           >
             this one! 🍴

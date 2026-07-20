@@ -14,12 +14,13 @@ interface AppState {
   time: string
   notes: string
   foods: string[]
+  place: string
 }
 
 function App() {
   const [screen, setScreen] = useState<Screen>('landing')
   const [showConfetti, setShowConfetti] = useState(false)
-  const [state, setState] = useState<AppState>({ date: '', time: '', notes: '', foods: [] })
+  const [state, setState] = useState<AppState>({ date: '', time: '', notes: '', foods: [], place: '' })
 
   function handleYes() {
     setShowConfetti(true)
@@ -32,8 +33,8 @@ function App() {
     setScreen('food')
   }
 
-  function handleFoodNext(foods: string[]) {
-    setState((s) => ({ ...s, foods }))
+  function handleFoodNext(foods: string[], place: string) {
+    setState((s) => ({ ...s, foods, place }))
     setScreen('summary')
   }
 
@@ -75,6 +76,7 @@ function App() {
               time={state.time}
               notes={state.notes}
               foods={state.foods}
+              place={state.place}
             />
           </motion.div>
         )}

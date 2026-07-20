@@ -21,6 +21,7 @@ interface FinalSummaryProps {
   time: string
   notes: string
   foods: string[]
+  place: string
 }
 
 /* ─── Helpers ───────────────────────────────────────────────── */
@@ -129,10 +130,11 @@ function SummaryItem({ icon, label, value }: { icon: string; label: string; valu
 }
 
 /* ─── SummaryCard ────────────────────────────────────────────── */
-function SummaryCard({ date, time, notes, foods }: FinalSummaryProps) {
+function SummaryCard({ date, time, notes, foods, place }: FinalSummaryProps) {
   const items = [
     { icon: '📅', label: 'When', value: `${formatDate(date)} at ${formatTime(time)}` },
-    { icon: '🍽️', label: 'Food', value: foodLabels(foods) },
+    ...(foods.length > 0 ? [{ icon: '🍽️', label: 'Food', value: foodLabels(foods) }] : []),
+    ...(place ? [{ icon: '📍', label: 'Place', value: place }] : []),
     ...(notes ? [{ icon: '📝', label: 'Notes', value: notes }] : []),
   ]
 
@@ -203,7 +205,7 @@ const PAGE_BG: React.CSSProperties = {
 }
 
 /* ─── Main component ────────────────────────────────────────── */
-export function FinalSummary({ date, time, notes, foods }: FinalSummaryProps) {
+export function FinalSummary({ date, time, notes, foods, place }: FinalSummaryProps) {
   const [toastVisible, setToastVisible] = useState(false)
   const [showConfetti, setShowConfetti] = useState(true)
 
@@ -223,7 +225,8 @@ export function FinalSummary({ date, time, notes, foods }: FinalSummaryProps) {
     `💌 It's a date!\n`,
     `📅 Date:\n${formatDate(date)}`,
     `🕐 Time:\n${formatTime(time)}`,
-    `🍽️ Food:\n${foodLabels(foods)}`,
+    ...(foods.length > 0 ? [`🍽️ Food:\n${foodLabels(foods)}`] : []),
+    ...(place ? [`📍 Place:\n${place}`] : []),
     ...(notes ? [`📝 Notes:\n${notes}`] : []),
     `\nCan't wait 💕`,
   ].join('\n\n')
@@ -291,7 +294,7 @@ export function FinalSummary({ date, time, notes, foods }: FinalSummaryProps) {
           </motion.p>
 
           {/* Summary card */}
-          <SummaryCard date={date} time={time} notes={notes} foods={foods} />
+          <SummaryCard date={date} time={time} notes={notes} foods={foods} place={place} />
 
           {/* P.S. note */}
           <motion.p
