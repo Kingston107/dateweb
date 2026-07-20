@@ -116,7 +116,7 @@ export function LandingPage({ onYes }: LandingPageProps) {
         {/* Heading */}
         <motion.h1
           variants={childVariants}
-          className="mt-10 mb-[80px] max-w-[600px] text-center"
+          className="mt-10 mb-[160px] max-w-[600px] text-center"
           style={{
             fontFamily: '"Playfair Display", Georgia, serif',
             fontWeight: 800,
@@ -131,6 +131,8 @@ export function LandingPage({ onYes }: LandingPageProps) {
           Will you go out
           <br />
           with me?
+          <br />
+          <br />
         </motion.h1>
 
         {/* Buttons */}
