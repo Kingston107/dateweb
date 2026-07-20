@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────
+   Design Tokens
+   ───────────────────────────────────────────── */
+@theme {
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+
+  --color-rose-deep: #C84D75;
+  --color-rose-mid:  #E0739A;
+  --color-rose-light: #F5A7C0;
+  --color-blush:     #FDE8F0;
+  --color-blush-pale: #FFF5F8;
+  --color-petal:     #FFF0F5;
+  --color-white:     #FFFFFF;
+}
+
+/* ─────────────────────────────────────────────
+   Base Reset / Global
+   ───────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden; /* prevent scroll on landing */
+}
+
+/* ─────────────────────────────────────────────
+   Gradient interpolation fallback (CSS guide)
+   ───────────────────────────────────────────── */
+:root {
+  --in-oklab: ;
+}
+
+@supports (background: linear-gradient(in oklab, white, black)) {
+  :root {
+    --in-oklab: in oklab;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   Reduced motion support (CSS guide)
+   ───────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-reduce: 1;
+  }
+}
