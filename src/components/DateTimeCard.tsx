@@ -12,6 +12,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { FloatingHeart } from './FloatingHeart'
 import { HEART_CONFIGS } from '../data/heartConfig'
+import { ProgressDots } from './ProgressDots'
 
 /* ─── Shared input style ───────────────────────────────────── */
 const INPUT_BASE: React.CSSProperties = {
@@ -147,11 +148,11 @@ export function NotesInput({
 }
 
 /* ─── Framer Motion variants ───────────────────────────────── */
-const cardVariants = {
+const cardVariants: import('framer-motion').Variants = {
   hidden: { opacity: 0, y: 36 },
   visible: {
     opacity: 1, y: 0,
-    transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as const },
   },
 }
 
@@ -160,34 +161,14 @@ const stagger = {
   visible: { transition: { staggerChildren: 0.1, delayChildren: 0.15 } },
 }
 
-const fieldVariant = {
+const fieldVariant: import('framer-motion').Variants = {
   hidden: { opacity: 0, y: 18 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] as const } },
 }
 
-const btnVariant = {
+const btnVariant: import('framer-motion').Variants = {
   hidden: { opacity: 0, scale: 0.82 },
-  visible: { opacity: 1, scale: 1, transition: { type: 'spring', stiffness: 340, damping: 22 } },
-}
-
-/* ─── Progress dots ────────────────────────────────────────── */
-function ProgressDots({ step }: { step: number }) {
-  return (
-    <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginBottom: 28 }}>
-      {[0, 1, 2].map((i) => (
-        <div
-          key={i}
-          style={{
-            width: i === step ? 24 : 8,
-            height: 8,
-            borderRadius: 9999,
-            background: i === step ? '#C84D75' : '#F5A7C0',
-            transition: 'width 0.3s ease, background 0.3s ease',
-          }}
-        />
-      ))}
-    </div>
-  )
+  visible: { opacity: 1, scale: 1, transition: { type: 'spring' as const, stiffness: 340, damping: 22 } },
 }
 
 /* ─── Page background (same as other screens) ──────────────── */

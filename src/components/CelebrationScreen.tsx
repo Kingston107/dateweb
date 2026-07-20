@@ -11,25 +11,25 @@
  *   4. Subtext
  *   5. "okay okay!" button
  */
-import { motion } from 'framer-motion'
+import { motion, type Variants } from 'framer-motion'
 import { FloatingHeart } from './FloatingHeart'
 import { DateButton } from './DateButton'
 import { HEART_CONFIGS } from '../data/heartConfig'
 
 /* ─── Framer Motion stagger ─────────────────────────────── */
-const container = {
+const container: Variants = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.13, delayChildren: 0.1 } },
 }
 
-const rise = {
+const rise: Variants = {
   hidden: { opacity: 0, y: 32 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const } },
 }
 
-const pop = {
+const pop: Variants = {
   hidden: { opacity: 0, scale: 0.75 },
-  visible: { opacity: 1, scale: 1, transition: { type: 'spring', stiffness: 340, damping: 22 } },
+  visible: { opacity: 1, scale: 1, transition: { type: 'spring' as const, stiffness: 340, damping: 22 } },
 }
 
 /* ─── Party Popper SVG ──────────────────────────────────── */

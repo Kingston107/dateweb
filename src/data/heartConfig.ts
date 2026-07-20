@@ -8,17 +8,7 @@
  * full viewport without clustering near the main content area.
  */
 
-export interface HeartConfig {
-  id: string
-  left: string
-  top: string
-  size: number
-  duration: number
-  delay: number
-  opacity: number
-}
-
-export const HEART_CONFIGS: HeartConfig[] = [
+export const HEART_CONFIGS = [
   // Top-left cluster
   { id: 'h1',  left: '4%',   top: '8%',  size: 14, duration: 4.2, delay: 0,    opacity: 0.18 },
   { id: 'h2',  left: '9%',   top: '22%', size: 10, duration: 5.1, delay: 0.8,  opacity: 0.12 },

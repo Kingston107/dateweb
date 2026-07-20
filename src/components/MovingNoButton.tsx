@@ -154,7 +154,7 @@ export function MovingNoButton({ yesRef }: MovingNoButtonProps) {
         setTransform({ scale: 1, rotate: (Math.random() - 0.5) * 15 })
       }
     },
-    [pos, shouldReduce, yesRef]
+    [shouldReduce, yesRef]
   )
 
   useEffect(() => {

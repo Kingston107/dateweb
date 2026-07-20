@@ -13,6 +13,7 @@ import { FloatingHeart } from './FloatingHeart'
 import { ConfettiExplosion } from './ConfettiExplosion'
 import { HEART_CONFIGS } from '../data/heartConfig'
 import { FOODS } from '../data/foods'
+import { ProgressDots } from './ProgressDots'
 
 /* ─── Types ─────────────────────────────────────────────────── */
 interface FinalSummaryProps {
@@ -47,6 +48,12 @@ function foodLabels(ids: string[]): string {
     const f = FOODS.find((x) => x.id === id)
     return f ? `${f.emoji} ${f.label}` : id
   }).join(', ')
+}
+
+/* ─── SummaryItem variants (hoisted — not re-created per render) ── */
+const summaryItemVariants: import('framer-motion').Variants = {
+  hidden: { opacity: 0, x: -16 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] as const } },
 }
 
 /* ─── Toast ─────────────────────────────────────────────────── */
@@ -89,10 +96,7 @@ function Toast({ visible }: { visible: boolean }) {
 function SummaryItem({ icon, label, value }: { icon: string; label: string; value: string }) {
   return (
     <motion.div
-      variants={{
-        hidden: { opacity: 0, x: -16 },
-        visible: { opacity: 1, x: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } },
-      }}
+      variants={summaryItemVariants}
       style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}
     >
       {/* Icon circle */}
@@ -190,21 +194,6 @@ function CopyButton({ text, onCopy }: { text: string; onCopy: () => void }) {
     >
       📋 Copy plan &amp; text me
     </motion.button>
-  )
-}
-
-/* ─── Progress dots (all filled = step 3 complete) ─────────── */
-function ProgressDots() {
-  return (
-    <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginBottom: 24 }}>
-      {[0, 1, 2].map((i) => (
-        <div key={i} style={{
-          width: 24, height: 8, borderRadius: 9999,
-          background: '#C84D75',
-          transition: 'width 0.3s ease',
-        }} />
-      ))}
-    </div>
   )
 }
 

@@ -37,7 +37,7 @@ function App() {
     setScreen('summary')
   }
 
-  const slideExit = { opacity: 0, scale: 0.96, transition: { duration: 0.35, ease: 'easeInOut' } }
+  const slideExit = { opacity: 0, scale: 0.96, transition: { duration: 0.35, ease: 'easeInOut' as const } }
 
   return (
     <>

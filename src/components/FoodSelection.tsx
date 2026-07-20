@@ -10,8 +10,8 @@ import { motion } from 'framer-motion'
 import { FloatingHeart } from './FloatingHeart'
 import { DateButton } from './DateButton'
 import { HEART_CONFIGS } from '../data/heartConfig'
-
 import { FOODS } from '../data/foods'
+import { ProgressDots } from './ProgressDots'
 
 /* ─── FoodCard ──────────────────────────────────────────────── */
 interface FoodCardProps {
@@ -103,30 +103,10 @@ function FoodCard({ emoji, label, selected, onToggle }: FoodCardProps) {
   )
 }
 
-/* ─── Progress dots (same pattern as DateTimeCard) ─────────── */
-function ProgressDots({ step }: { step: number }) {
-  return (
-    <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginBottom: 24 }}>
-      {[0, 1, 2].map((i) => (
-        <div
-          key={i}
-          style={{
-            width: i === step ? 24 : 8,
-            height: 8,
-            borderRadius: 9999,
-            background: i === step ? '#C84D75' : '#F5A7C0',
-            transition: 'width 0.3s ease, background 0.3s ease',
-          }}
-        />
-      ))}
-    </div>
-  )
-}
-
 /* ─── Variants ──────────────────────────────────────────────── */
-const screenVariant = {
+const screenVariant: import('framer-motion').Variants = {
   hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as const } },
 }
 
 const gridStagger = {
