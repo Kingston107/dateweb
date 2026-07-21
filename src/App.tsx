@@ -7,8 +7,9 @@ import { DateTimeCard } from './components/DateTimeCard'
 import { FoodSelection } from './components/FoodSelection'
 import { FinalSummary } from './components/FinalSummary'
 import { AboutYouCard } from './components/AboutYouCard'
+import { MessagePage } from './components/MessagePage'
 
-type Screen = 'landing' | 'celebration' | 'datetime' | 'food' | 'about-you' | 'writing-message' | 'summary'
+type Screen = 'landing' | 'celebration' | 'datetime' | 'food' | 'about-you' | 'message' | 'summary'
 
 const LeftArrowIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -31,12 +32,13 @@ interface AppState {
   place: string
   name: string
   gender: string
+  generatedMessage: string
 }
 
 function App() {
   const [screen, setScreen] = useState<Screen>('landing')
   const [showConfetti, setShowConfetti] = useState(false)
-  const [state, setState] = useState<AppState>({ date: '', time: '', notes: '', foods: [], customFood: '', place: '', name: '', gender: '' })
+  const [state, setState] = useState<AppState>({ date: '', time: '', notes: '', foods: [], customFood: '', place: '', name: '', gender: '', generatedMessage: '' })
 
   function handleUpdate(updates: Partial<AppState>) {
     setState(s => ({ ...s, ...updates }))
@@ -154,15 +156,23 @@ function App() {
             <AboutYouCard
               name={state.name}
               gender={state.gender}
+              date={state.date}
+              time={state.time}
+              food={[...state.foods, state.customFood.trim()].filter(Boolean).join(', ')}
+              notes={state.notes}
               onUpdate={handleUpdate}
-              onNext={() => setScreen('writing-message')}
+              onNext={(msg) => { handleUpdate({ generatedMessage: msg }); setScreen('message') }}
             />
           </motion.div>
         )}
 
-        {screen === 'writing-message' && (
-          <motion.div key="writing-message" style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(160deg in oklab, #FFF5F8 0%, #FFF0F5 35%, #FDE8F0 65%, #FBCFE8 100%)' }}>
-            <p style={{ fontFamily: '"Inter", system-ui, sans-serif', color: '#C84D75', fontSize: '1.2rem' }}>✍️ Writing your message…</p>
+        {screen === 'message' && (
+          <motion.div key="message" exit={slideExit} style={{ height: '100vh' }}>
+            <MessagePage 
+              name={state.name} 
+              message={state.generatedMessage}
+              onNext={() => setScreen('summary')} 
+            />
           </motion.div>
         )}
 
