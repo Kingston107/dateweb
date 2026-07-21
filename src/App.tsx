@@ -6,8 +6,9 @@ import { ConfettiExplosion } from './components/ConfettiExplosion'
 import { DateTimeCard } from './components/DateTimeCard'
 import { FoodSelection } from './components/FoodSelection'
 import { FinalSummary } from './components/FinalSummary'
+import { AboutYouCard } from './components/AboutYouCard'
 
-type Screen = 'landing' | 'celebration' | 'datetime' | 'food' | 'summary'
+type Screen = 'landing' | 'celebration' | 'datetime' | 'food' | 'about-you' | 'writing-message' | 'summary'
 
 const LeftArrowIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -28,25 +29,28 @@ interface AppState {
   foods: string[]
   customFood: string
   place: string
+  name: string
+  gender: string
 }
 
 function App() {
   const [screen, setScreen] = useState<Screen>('landing')
   const [showConfetti, setShowConfetti] = useState(false)
-  const [state, setState] = useState<AppState>({ date: '', time: '', notes: '', foods: [], customFood: '', place: '' })
+  const [state, setState] = useState<AppState>({ date: '', time: '', notes: '', foods: [], customFood: '', place: '', name: '', gender: '' })
 
   function handleUpdate(updates: Partial<AppState>) {
     setState(s => ({ ...s, ...updates }))
   }
 
-  const navOrder: Screen[] = ['landing', 'datetime', 'food', 'summary']
-  const showArrows = screen === 'landing' || screen === 'datetime' || screen === 'food'
+  const navOrder: Screen[] = ['landing', 'datetime', 'food', 'about-you', 'summary']
+  const showArrows = screen === 'landing' || screen === 'datetime' || screen === 'food' || screen === 'about-you'
   const currentIndex = navOrder.indexOf(screen)
 
   function canTraverseNext() {
     if (screen === 'landing') return false
     if (screen === 'datetime') return state.date.trim() !== '' && state.time.trim() !== ''
     if (screen === 'food') return state.foods.length > 0 || state.customFood.trim() !== '' || state.place.trim() !== ''
+    if (screen === 'about-you') return state.name.trim() !== '' && state.gender !== ''
     return false
   }
 
@@ -71,7 +75,7 @@ function App() {
   }
 
   function handleFoodNext() {
-    setScreen('summary')
+    setScreen('about-you')
   }
 
   const slideExit = { opacity: 0, scale: 0.96, transition: { duration: 0.35, ease: 'easeInOut' as const } }
@@ -142,6 +146,23 @@ function App() {
               onUpdate={handleUpdate}
               onNext={handleFoodNext}
             />
+          </motion.div>
+        )}
+
+        {screen === 'about-you' && (
+          <motion.div key="about-you" exit={slideExit} style={{ height: '100vh' }}>
+            <AboutYouCard
+              name={state.name}
+              gender={state.gender}
+              onUpdate={handleUpdate}
+              onNext={() => setScreen('writing-message')}
+            />
+          </motion.div>
+        )}
+
+        {screen === 'writing-message' && (
+          <motion.div key="writing-message" style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(160deg in oklab, #FFF5F8 0%, #FFF0F5 35%, #FDE8F0 65%, #FBCFE8 100%)' }}>
+            <p style={{ fontFamily: '"Inter", system-ui, sans-serif', color: '#C84D75', fontSize: '1.2rem' }}>✍️ Writing your message…</p>
           </motion.div>
         )}
 
