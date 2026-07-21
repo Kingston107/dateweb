@@ -1,10 +1,10 @@
-import express from 'express'
 import { GoogleGenAI } from '@google/genai'
 
-const app = express()
-app.use(express.json())
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method Not Allowed' })
+  }
 
-app.post('/api/generate-message', async (req, res) => {
   const apiKey = process.env.GEMINI_API_KEY
   if (!apiKey) return res.status(500).json({ error: 'API key not configured' })
 
@@ -210,12 +210,9 @@ Only the message.`
     const message = response.text?.trim()
     if (!message) throw new Error('Empty response from Gemini')
 
-    res.json({ message })
+    return res.status(200).json({ message })
   } catch (err) {
     console.error('Gemini API Error:', err)
-    const fallbackMessage = `Hey, you. Yes, you.\n\nI've been wanting to tell you something for a while now, and I finally worked up the courage to say it — in the form of a website, because apparently that's my love language.\n\nYou make everything better. Not just good, but genuinely, noticeably better. The way you laugh, the way you think, the way you show up — it matters more than you know.\n\nSo here it is: I like you. A lot. And I'd really love for you to say yes. 💕`
-    res.json({ message: fallbackMessage })
+    return res.status(500).json({ error: 'Something went wrong while writing your message.' })
   }
-})
-
-app.listen(3001, () => console.log('Express server running on http://localhost:3001'))
+}
