@@ -41,12 +41,17 @@ export function DateInput({
   value: string
   onChange: (v: string) => void
 }) {
-
+  const now = new Date()
+  const yyyy = now.getFullYear()
+  const mm = String(now.getMonth() + 1).padStart(2, '0')
+  const dd = String(now.getDate()).padStart(2, '0')
+  const minDate = `${yyyy}-${mm}-${dd}`
 
   return (
     <input
       id="date-picker"
       type="date"
+      min={minDate}
       value={value}
       onChange={(e) => onChange(e.target.value)}
       onClick={(e) => {
