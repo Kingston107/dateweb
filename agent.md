@@ -232,4 +232,4 @@ Only the message.
 
 ## The Model
 
-The project uses `gemini-3.5-flash`. This model is chosen because it is extremely fast (crucial for keeping the loading animation around 3 seconds) while still being more than capable of generating high-quality, natural language text.
+The project uses `gemini-3.1-flash-lite`. This model is chosen because it is extremely fast (crucial for keeping the loading animation around 3 seconds) while still being more than capable of generating high-quality, natural language text.
