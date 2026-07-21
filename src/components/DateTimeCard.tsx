@@ -51,7 +51,6 @@ export function DateInput({
     <input
       id="date-picker"
       type="date"
-      min={minDate}
       value={value}
       onChange={(e) => onChange(e.target.value)}
       onClick={(e) => {
